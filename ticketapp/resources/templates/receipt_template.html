@@ -1,0 +1,59 @@
+{% load bootstrap_email %}
+<html >
+  <head>
+   
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Ticket Bought Successfully</title>
+    <style media="all" type="text/css">
+        {% bootstrap_email %}
+    </style>
+  </head>
+  <body>
+    Hi , {{user.name}} You have successfully purchased the following tickets,
+
+
+    <table class="table ">
+      <thead class="thead">
+        <tr>
+          <th>Ticket Id</th>
+          <th>Seat</th>
+          <th>Match</th>
+          <th>Series</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets %}
+
+        <tr>
+          <td>{{ticket.id}}</td>
+          <td scope="row">{{ticket.seat.name}}</td>
+          <td>{{ticket.match.name}}</td>
+          <td>{{ticket.match.series.name}}</td>
+          <td>{{ticket.seat.type}}</td>
+
+          <td>
+            {% if ticket.seat.type == "VIP" %}
+             Nrs      {{ticket.match.vipTicketPrice}} 
+             {% elif ticket.seat.type == "premium" %}
+              Nrs {{ticket.match.platinumTicketPrice}}
+               {% else %}
+            Nrs.{{ticket.match.normalTicketPrice}}
+             {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Paid : Nrs. {{amount}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Transaction Id : {{token}}</p>
+    <p>Paid By : {{paid_by}}</p>
+    <p>Payment Method : Khalti </p>
+  </body>
+</html>

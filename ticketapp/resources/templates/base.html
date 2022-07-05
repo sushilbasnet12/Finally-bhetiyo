@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    <title>RangaShala Ticket App</title>
+
+    <link
+      href="/static/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <script
+      src="/static/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style type="text/css">
+      .navbar .megamenu {
+        padding: 1rem;
+      }
+      /* ============ desktop view ============ */
+      @media all and (min-width: 992px) {
+        .navbar .has-megamenu {
+          position: static !important;
+        }
+        .navbar .megamenu {
+          left: 0;
+          right: 0;
+          width: 100%;
+          margin-top: 0;
+        }
+      }
+      /* ============ desktop view .end// ============ */
+
+      /* ============ mobile view ============ */
+      @media (max-width: 991px) {
+        .navbar.fixed-top .navbar-collapse,
+        .navbar.sticky-top .navbar-collapse {
+          overflow-y: auto;
+          max-height: 90vh;
+          margin-top: 10px;
+        }
+      }
+      /* ============ mobile view .end// ============ */
+
+      div::-webkit-scrollbar {
+        width: 2px;
+      }
+    </style>
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        /////// Prevent closing from click inside dropdown
+        document.querySelectorAll(".dropdown-menu").forEach(function (element) {
+          element.addEventListener("click", function (e) {
+            e.stopPropagation();
+          });
+        });
+      });
+      // DOMContentLoaded  end
+    </script>
+    {% block headjs %}{% endblock headjs %}
+  </head>
+  <body>
+    <!-- ============= COMPONENT ============== -->
+    <nav
+      class="navbar navbar-expand-lg sticky-top navbar-light shadow-sm bg-light"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Stadium TicketApp</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#main_nav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main_nav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about"> About </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/matches"> Matches </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact"> Contact Us </a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-bs-toggle="dropdown"
+              >
+                {{user.first_name}} {{user.last_name}}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="/reservations">
+                    My Reservations
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/tickets"> My Tickets </a>
+                </li>
+
+                <li>
+                  <a class="dropdown-item" href="/auth/logout"> Logout </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/register">Register</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+        <!-- navbar-collapse.// -->
+      </div>
+      <!-- container-fluid.// -->
+    </nav>
+    <!-- ============= COMPONENT END// ============== -->
+    <div class="container">
+      <section class="section-content py-5">
+        {% block content %}{% endblock content %}
+      </section>
+    </div>
+  </body>
+</html>

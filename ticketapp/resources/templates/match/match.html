@@ -1,0 +1,470 @@
+{% extends 'base.html' %} {% load json %} {% block content %}
+
+<link rel="stylesheet" href="/static/css/match.css" />
+<script src="/static/js/vue.global.js"></script>
+{% for match in matches %}
+<div class="card mb-5" style="width: 100%">
+  <div class="card-title">
+    <div class="d-flex justify-content-around px-3 py-2">
+      <p>{{match.name}}</p>
+      <div class="d-flex justify-content-center">
+        <p class="mx-2">{{match.series.name|upper}}</p>
+        <img src="/{{match.series.image}}" alt="" width="30" height="30" />
+      </div>
+
+      <img
+        class="mx-2"
+        src="/{{match.series.game.image}}"
+        alt=""
+        width="30"
+        height="30"
+      />
+    </div>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div
+          class="col-4 d-flex align-items-center justify-content-around flex-column"
+        >
+          <img
+            src="/{{match.team1_image}}"
+            class="mb-2"
+            alt=""
+            width="80"
+            height="80"
+          />
+          <h4>{{match.team1_name|upper}}</h4>
+        </div>
+        <div
+          class="col-4 d-flex align-items-center flex-column justify-content-around"
+        >
+          <h3>vs</h3>
+          <p>{{match.start_time}}</p>
+        </div>
+        <div
+          class="col-4 d-flex align-items-center justify-content-around flex-column"
+        >
+          <img
+            src="/{{match.team2_image}}"
+            class="mb-2"
+            alt=""
+            width="80"
+            height="80"
+          />
+          <h4>{{match.team2_name|upper}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}
+  <div class="col-megamenu">
+    <h6 class="title">{{match.name}}</h6>
+
+    <ul class="list-unstyled">
+      {% for series in match.series.all() %}
+      <li><a href="#">{{series.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endcomment %}
+  <!-- col-megamenu.// -->
+</div>
+<!-- end col-3 -->
+{% endfor %}
+<div id="app">
+  <div class="stadium">
+    <div class="left">
+      <div class="card west-box">
+        <div class="card-body block-west">
+          <div
+            v-for="(row,j) in blocks['west']"
+            :key="j"
+            class="d-flex justify-content-between row-west"
+          >
+            <div v-for="seat in row.seats">
+              <div
+                v-if="isReserved(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-reserved'"
+                @click="e=>alert('seat is reserved')"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="isSoldOut(seat.id)"
+                @click="e=>alert('seat is sold out')"
+                :class="'seat-'+seat.type+' seat seat-soldout'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="!checkselected(seat.id)"
+                @click="e=>select(seat.id)"
+                :class="'seat-'+seat.type+' seat'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else
+                @click="e=>deselect(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-selected'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="middle">
+      <div class="card card-north">
+        <div class="card-body block-north">
+          <div
+            v-for="(row,j) in blocks['north']"
+            :key="j"
+            class="d-flex justify-content-between row-north"
+          >
+            <div v-for="seat in row.seats">
+              <div
+                v-if="isReserved(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-reserved'"
+                @click="e=>alert('seat is reserved')"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="isSoldOut(seat.id)"
+                @click="e=>alert('seat is sold out')"
+                :class="'seat-'+seat.type+' seat seat-soldout'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="!checkselected(seat.id)"
+                @click="e=>select(seat.id)"
+                :class="'seat-'+seat.type+' seat'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else
+                @click="e=>deselect(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-selected'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-south">
+        <div class="card-body block-south">
+          <div
+            v-for="(row,j) in blocks['south']"
+            :key="j"
+            class="d-flex justify-content-between row-south"
+          >
+            <div v-for="seat in row.seats">
+              <div
+                v-if="isReserved(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-reserved'"
+                @click="e=>alert('seat is reserved')"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="isSoldOut(seat.id)"
+                @click="e=>alert('seat is sold out')"
+                :class="'seat-'+seat.type+' seat seat-soldout'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="!checkselected(seat.id)"
+                @click="e=>select(seat.id)"
+                :class="'seat-'+seat.type+' seat'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else
+                @click="e=>deselect(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-selected'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="card east-box">
+        <div class="card-body block-east">
+          <div
+            v-for="(row,j) in blocks['east']"
+            :key="j"
+            class="d-flex justify-content-between row-east"
+          >
+            <div v-for="seat in row.seats">
+              <div
+                v-if="isReserved(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-reserved'"
+                @click="e=>alert('seat is reserved')"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="isSoldOut(seat.id)"
+                @click="e=>alert('seat is sold out')"
+                :class="'seat-'+seat.type+' seat seat-soldout'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else-if="!checkselected(seat.id)"
+                @click="e=>select(seat.id)"
+                :class="'seat-'+seat.type+' seat'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+              <div
+                v-else
+                @click="e=>deselect(seat.id)"
+                :class="'seat-'+seat.type+' seat seat-selected'"
+              >
+                {% include 'partials/seat.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex my-5">
+    <div class="seat seat-reserved">{% include 'partials/seat.html' %}</div> 
+    <p>  Reserved</p>
+    <div class="ms-2 seat seat-soldout">{% include 'partials/seat.html' %}</div> 
+    <p>  Soldout</p>
+    <div class="ms-2 seat seat-selected">{% include 'partials/seat.html' %}</div> 
+    <p>  Selected</p>
+    <div class="ms-2 seat">{% include 'partials/seat.html' %}</div> 
+    <p>  Available</p>
+  </div>
+  <div class="container my-5">
+    <h5>Selected Seats</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Seat Name</th>
+          <th>Type</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="seat in selectedseatsdata.seats">
+          <td scope="row">[[seat.name]]</td>
+          <td>[[seat.type]]</td>
+          <td>[[seat.price]]</td>
+        </tr>
+
+        <tr></tr>
+
+        <tr>
+          <th></th>
+          <th>Total</th>
+          <th>[[selectedseatsdata.total]]</th>
+        </tr>
+        <tr v-if="selectedSeats.length > 0">
+          <th></th>
+          <th></th>
+          <th>
+            {% comment %}
+            <form>
+              {% csrf_token %}
+              <input
+                type="text"
+                name="seats"
+                :value="selectedseatsdata.seatsstring"
+                hidden
+              />
+              <input type="number" name="match" :value="match.id" hidden />
+              <button type="submit" class="btn btn-success">Checkout</button>
+            </form>
+            {% endcomment %}
+
+            <button class="btn btn-success" @click="e=>reserve()">
+              Reserve
+            </button>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <form
+    :action="'/matches/'+match.id+'/reserve'"
+    method="POST"
+    id="reservation-form"
+  >
+    {% csrf_token %}
+    <input type="text" name="seats" />
+  </form>
+</div>
+<script>
+  Vue.createApp({
+    delimiters: ["[[", "]]"],
+    computed: {
+      blocks() {
+        console.log(this.seatReservations);
+        const rows = this.rows;
+        let blocks = {};
+
+        const seats = this.seats;
+
+        rowswithseats = rows.map((r) => {
+          _seats = seats
+            .filter((s) => s.row == r.id)
+            .sort((a, b) => a.index - b.index);
+
+          return {
+            ...r,
+            seats: _seats,
+          };
+        });
+
+        let blocknames = ["east", "west", "north", "south"];
+
+        blocknames
+          .map((name) => {
+            blocks[name] = rowswithseats.filter((r) => r.block == name);
+          })
+          .sort((a, b) => a.index - b.index);
+
+        return blocks;
+      },
+      selectedseatsdata() {
+        const _seats = this.selectedSeats;
+        const seats = _seats.map((s) => {
+          return {
+            ...s,
+            price:
+              s.type === "VIP"
+                ? this.match.vipTicketPrice
+                : s.type == "premium"
+                ? this.match.platinumTicketPrice
+                : this.match.normalTicketPrice,
+          };
+        });
+
+        const total = seats.reduce((total, seat) => seat.price + total, 0);
+        const seatsstring = seats.map((s) => s.id).toString();
+        return {
+          seats,
+          total,
+          seatsstring,
+        };
+      },
+    },
+    data() {
+      return {
+        socket: null,
+        selectedSeats: [],
+        match: JSON.parse("{{ matches|json }}".replaceAll("&quot;", '"')).map(
+          (e) => ({ ...e.fields, id: e.pk })
+        )[0],
+        seats: JSON.parse("{{ seats|json }}".replaceAll("&quot;", '"')).map(
+          (e) => ({ ...e.fields, id: e.pk })
+        ),
+        rows: JSON.parse("{{ rows|json }}".replaceAll("&quot;", '"')).map(
+          (e) => ({ ...e.fields, id: e.pk })
+        ),
+        seatReservations: JSON.parse(
+          "{{ seatReservations|json }}".replaceAll("&quot;", '"')
+        ).map((e) => ({ ...e.fields, id: e.pk })),
+        tickets: JSON.parse("{{ tickets|json }}".replaceAll("&quot;", '"')).map(
+          (e) => ({ ...e.fields, id: e.pk })
+        ),
+      };
+    },
+    methods: {
+      select(id) {
+        const seat = this.seats.find((seat) => seat.id == id);
+        this.selectedSeats = [...this.selectedSeats, seat];
+      },
+
+      checkselected(id) {
+        return this.selectedSeats.find((s) => s.id == id);
+      },
+
+      deselect(id) {
+        this.selectedSeats = this.selectedSeats.filter((e) => e.id != id);
+      },
+
+      reserve() {
+        if (this.selectedSeats.length < 1) {
+          return alert("No Seats Selected");
+        }
+
+        const form = document.getElementById("reservation-form");
+        form.elements["seats"].value = this.selectedSeats
+          .map((s) => s.id)
+          .toString();
+        form.submit();
+      },
+
+      addReservation(data) {},
+      alert(text) {
+        alert(text);
+      },
+
+      isReserved(id) {
+        const seat = this.seatReservations.find((s) => s.seat == id);
+        return !!seat;
+      },
+      isSoldOut(id) {
+        const seat = this.tickets.find((s) => s.seat == id);
+        return !!seat;
+      },
+    },
+    mounted: function () {
+      const match = JSON.parse(
+        "{{ matches|json }}".replaceAll("&quot;", '"')
+      ).map((e) => ({ ...e.fields, id: e.pk }))[0];
+      this.socket = new WebSocket(
+        `ws://${window.location.host}/ws/match/${match.id}/`
+      );
+
+
+      
+      this.socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+
+        if (data.type == "seat_reserved") {
+          this.seatReservations = [...this.seatReservations, data.reservation];
+          this.selectedSeats = this.selectedSeats.filter(
+            (e) => e.id !== data.reservation.seat
+          );
+        }
+        if (data.type == "seat_sold") {
+          this.tickets = [...this.tickets, data.reservation];
+          this.selectedSeats = this.selectedSeats.filter(
+            (e) => e.id !== data.reservation.seat
+          );
+          this.seatReservations = this.seatReservations.filter(
+            (e) => e.seat != data.reservation.seat
+          );
+        }
+      };
+
+      this.socket.onopen = function (event) {
+        console.log(event);
+        console.log("Successfully connected to the echo websocket server...");
+      };
+    },
+  }).mount("#app");
+</script>
+
+{% endblock content %} {% comment %} this.seatReservations =
+[...this.seatReservations , data.reservation] {% endcomment %}

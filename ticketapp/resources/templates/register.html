@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% load static %} {% load json %}{% block content %}
+<div class="container my-5 row justify-content-center mx-auto">
+  <div class="card col col-md-8 col-lg-6 col-12 px-0">
+  <div class="card-header">Register</div>
+
+  <div class="card-body">
+    <form action="/auth/register/" method="POST">
+      {% csrf_token %}
+      {{form}}
+      <button type="submit" class="btn btn-success">Register</button>
+    </form>
+
+  </div>
+
+  <div class="card-footer text-muted">
+    Already Registered ? <a href="/auth/login">Login</a>
+  </div>
+</div>
+</div>
+
+{% endblock content%}

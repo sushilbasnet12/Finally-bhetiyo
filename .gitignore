@@ -1,0 +1,6 @@
+venv
+env
+/ticketapp/static/images
+/ticketapp/**/__pycache__
+/ticketapp/**/migrations
+/ticketapp/db.sqlite3

@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% load static %} 
+{% load gettotalpricefromreservation %}
+
+{% block headjs %}
+<script src="https://unpkg.com/khalti-checkout-web@latest/dist/khalti-checkout.iffe.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+{% endblock headjs %}
+{% block content %}
+<table class="table table-striped table-inverse table-responsive">
+  <thead class="thead-inverse">
+    <tr>
+        <th>Ticket Id</th>
+      <th>Seat</th>
+      <th>Match</th>
+      <th>Series</th>
+      <th>Type</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for ticket in tickets %}
+
+    <tr>
+        <td>{{ticket.id}}</td>
+      <td scope="row">{{ticket.seat.name}}</td>
+      <td>{{ticket.match.name}}</td>
+      <td>{{ticket.match.series.name}}</td>
+      <td>{{ticket.seat.type}}</td>
+
+
+    </tr>
+    {% endfor %}
+
+
+  </tbody>
+</table>
+
+
+
+{% endblock content %}

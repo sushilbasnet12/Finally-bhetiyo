@@ -1,0 +1,126 @@
+
+.card {
+    border-radius: 0;
+}
+
+.stadium {
+    display: flex;
+    align-items: center;
+    align-items: space-between;
+    width: 1000px;
+    height: 500px;
+    margin: auto;
+}
+
+.block-east {
+    display: flex;
+    flex-direction: row;
+}
+
+.left,
+.right {
+    height: 100%;
+    width: 20%;
+}
+
+.middle {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.west-box {
+    height: 100%;
+}
+
+.middle>.card {
+    width: 100%;
+    height: 45%;
+}
+
+.left>.card {
+    height: 100%;
+}
+
+.right>.card {
+    height: 100%;
+}
+
+.block-west {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-grow: 1;
+    align-content: space-between;
+}
+
+.row-west {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.block-east {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    align-content: space-between;
+}
+
+.row-east {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.block-north {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column-reverse;
+    height: 200px;
+}
+
+.block-south {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.row-north {
+    display: flex;
+}
+
+.seat,
+.seat-selected {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+
+}
+.seat>svg {
+    fill: green;
+}
+
+.seat-selected>svg {
+    fill: burlywood;
+}
+
+#reservation-form {
+    display: none;
+}
+
+.seat-reserved>svg {
+    fill: gray
+}
+
+.seat-soldout>svg {
+    fill: red
+}

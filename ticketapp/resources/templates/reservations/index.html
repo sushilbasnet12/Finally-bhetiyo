@@ -1,0 +1,109 @@
+{% extends 'base.html' %} {% load static %} 
+{% load gettotalpricefromreservation %}
+
+{% block headjs %}
+<script src="https://unpkg.com/khalti-checkout-web@latest/dist/khalti-checkout.iffe.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+{% endblock headjs %}
+{% block content %}
+<table class="table table-striped table-inverse table-responsive">
+  <thead class="thead-inverse">
+    <tr>
+      <th>Seat</th>
+      <th>Match</th>
+      <th>Series</th>
+      <th>Type</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for seatReservation in seatReservations %}
+
+    <tr>
+      <td scope="row">{{seatReservation.seat.name}}</td>
+      <td>{{seatReservation.match.name}}</td>
+      <td>{{seatReservation.match.series.name}}</td>
+      <td>{{seatReservation.seat.type}}</td>
+
+      <td>
+        {% if seatReservation.seat.type == "VIP" %} 
+            Nrs {{seatReservation.match.vipTicketPrice}} 
+        {% elif seatReservation.seat.type == "premium" %}
+            Nrs {{seatReservation.match.platinumTicketPrice}}
+        {% else %}
+            Nrs.{{seatReservation.match.normalTicketPrice}}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+
+        <td >
+
+          Total : Nrs.  {{seatReservations | gettotalpricefromreservation}}
+
+        </td>
+        <td>
+            {% if seatReservations|gettotalpricefromreservation > 0 %}
+            <button class="btn btn-success" id="payment-button">Checkout</button>
+            {% endif %}
+        </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<script>
+    var config = {
+        // replace the publicKey with yours
+        "publicKey": "test_public_key_dc74e0fd57cb46cd93832aee0a507256",
+        "productIdentity": "user_{{user.id}}",
+        "productName": "user_{{user.id}}",
+        "productUrl": "http://127.0.0.1:8000",
+        "paymentPreference": [
+            "KHALTI",
+            ],
+        "eventHandler": {
+            onSuccess (payload) {
+                // hit merchant api for initiating verfication
+                console.log(payload)
+                axios.get("/khalti-verify/", {
+                    params: {
+                        "token": payload.token,
+                        "amount": payload.amount,
+                    }
+                }).then(function(resp){
+
+                    
+                    if (resp.data.success == true){
+                        alert("Thanks. Payment Completed Successfully")
+                        location.href = "/tickets"
+                    }else{
+                        alert("Sorry. Error occurred")
+                        location.href = "{{request.build_absolute_uri}}"
+                    } 
+                })
+            },
+            onError (error) {
+                console.log(error);
+            },
+            onClose () {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({amount: {{seatReservations | gettotalpricefromreservation}}*100});
+    }
+</script>
+
+{% endblock content %}
